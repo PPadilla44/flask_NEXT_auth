@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .input-login {
+        @apply text-black rounded-md outline outline-1 placeholder-slate-300 
+        outline-slate-300 p-3 focus:outline-blue-500 focus:shadow-md;
+    }
+    .input-reg {
+        @apply text-black rounded-md outline outline-1 placeholder-gray-400 outline-slate-300 p-3 bg-gray-200;
+    }
+}
