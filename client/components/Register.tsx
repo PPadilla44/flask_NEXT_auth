@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
+import { useRouter } from 'next/router';
 import { Icon } from "@iconify/react"
 import axios from 'axios';
 
@@ -9,27 +10,37 @@ interface Props {
 
 const Register: React.FC<Props> = ({ toggleReg }) => {
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [cPassword, setCPassword] = useState("")
+    const router = useRouter();
 
-    const handleReg = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [cPassword, setCPassword] = useState("");
+
+    const [errors, setErrors] = useState([]);
+
+    const [loading, setLoading] = useState(false);
+
+    const handleReg = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        setLoading(false)
 
         const userData = new FormData();
         userData.append("email", email)
         userData.append("password", password)
         userData.append("cPassword", cPassword)
 
-        try {
-            const { data } = await axios.post("http://localhost:5000/register", userData)
-            console.log(data);
+        axios.post("http://localhost:5000/register", userData)
+            .then(res => {
+                console.log(res.data);
+                router.push("/dashboard")
+                setLoading(false)
+            })
+            .catch(err => {
+                setErrors(err.response.data)
+                setLoading(false)
+            })
 
-        } catch(err) {
-            console.log(err);
-            
-        }
-        
     }
 
     return (
@@ -51,8 +62,15 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
 
                 <hr className='my-4' />
 
-                <form onSubmit={handleReg } className='flex flex-col gap-5 text-white'>
+                <form onSubmit={handleReg} className='flex flex-col gap-5 text-white'>
 
+                    {
+                        errors.map((item, i) => {
+                            return (
+                                <p key={i} className="text-center text-red-700">{item}</p>
+                            )
+                        })
+                    }
 
                     <input
                         type="text"
@@ -60,14 +78,14 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
                         className='input-reg'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        />
+                    />
                     <input
                         type="text"
                         placeholder='Password'
                         className='input-reg'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        />
+                    />
                     <input type="text"
                         placeholder='Confirm Password'
                         className='input-reg'

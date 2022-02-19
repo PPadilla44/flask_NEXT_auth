@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction, useState } from 'react'
 
 interface Props {
@@ -7,42 +8,64 @@ interface Props {
 
 const Login: React.FC<Props> = ({ toggleReg }) => {
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const router = useRouter();
 
-    const hadleLogin = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const [errors, setErrors] = useState([]);
+
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true)
 
         const userData = new FormData();
         userData.append("email", email)
         userData.append("password", password)
 
-        try {
-            const { data } = await axios.post("http://localhost:5000/login", userData)
-            console.log(data);
+        axios.post("http://localhost:5000/login", userData)
+            .then(res => {
+                localStorage.setItem("token", res.data.token)
+                setLoading(false)
+                router.push("/dashboard")
+            })
+            .catch(err => {
+                
+                setErrors(err.response.data)
+                setLoading(false)
+            })
 
-        } catch(err) {
-            console.log(err);
-            
-        }
-        
     }
     return (
         <div className='w-96 bg-white text-white shadow-md rounded-md p-10 text-lg'>
 
-            <form className='flex flex-col gap-5' autoComplete='off'>
+            <form onSubmit={handleLogin} className='flex flex-col gap-5'>
 
-
+                {
+                errors.map((item, i) => {
+                    return (
+                        <p key={i} className="text-center text-red-700">{item}</p>
+                    )
+                })
+                }
                 <input
-                    type="text"
+                    type="email"
                     placeholder='Email'
-                    className='input-login' />
+                    className='input-login'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
 
 
                 <input
                     type="text"
                     placeholder='Password'
-                    className='input-login' />
+                    className='input-login'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
 
                 <button className='bg-blue-600 p-3 rounded-md font-bold hover:bg-blue-700 active:outline active:outline-2 active:outline-blue-500 active:shadow-md'>Log In</button>
 
