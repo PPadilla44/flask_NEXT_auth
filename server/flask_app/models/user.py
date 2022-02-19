@@ -9,6 +9,9 @@ EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 class User:
     def __init__(self, data):
         self.id = data["id"]
+        self.first_name = data["first_name"]
+        self.last_name = data["last_name"]
+        self.avatar = data["avatar"]
         self.email = data["email"]
         self.password = data["password"]
         self.created_at = data["created_at"]
@@ -17,6 +20,9 @@ class User:
     def serialize(self):
         return {
             "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "avatar": self.avatar,
             "email": self.email,
             "password": self.password,
             "created_at": self.created_at,
@@ -56,30 +62,37 @@ class User:
 
     @classmethod
     def save(cls, data):
-        query = "INSERT INTO users (email,password) \
-        VALUES (%(email)s,%(password)s);"
+        query = "INSERT INTO users (first_name, last_name, email,password) \
+        VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password)s);"
         return connectToMySQL(DB).query_db(query, data)
 
     @staticmethod
     def register_validation(user):
 
         errors = []
+        if len(user['first_name']) < 2:
+            errors.append('First name must be at least 2 characters')
+        else:
+            if not str(user['first_name']).isalpha():
+                errors.append('First name can NOT contain numbers')
+
+        if len(user['last_name']) < 2:
+            errors.append('Last name must be at least 2 characters')
+        else:
+            if not str(user['last_name']).isalpha():
+                errors.append('Last name can NOT contain numbers')
 
         if not EMAIL_REGEX.match(user['email']):
             errors.append('Invalid email address')
-            # flash(u'Invalid email address','email')
         else:
             if User.get_user_by_email({'email': user['email']}):
                 errors.append('Email address already taken')
-                # flash(u'Email address already taken','email')
 
         if len(user['password']) < 8:
             errors.append('Password must be at least 8 characters')
-            # flash(u'Password must be at least 8 characters','password')
 
         if user['password'] != user["cPassword"]:
             errors.append('Passwords do not match')
-            # flash(u'Passwords do not match','confirm_password')
 
         return errors
 

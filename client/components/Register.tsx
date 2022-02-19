@@ -7,14 +7,27 @@ interface Props {
     toggleReg: Dispatch<SetStateAction<boolean>>
 }
 
+interface User {
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    cPassword: string,
+}
+
 
 const Register: React.FC<Props> = ({ toggleReg }) => {
 
     const router = useRouter();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [cPassword, setCPassword] = useState("");
+    const [user, setUser] = useState<User>({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        cPassword: "",
+    });
+
 
     const [errors, setErrors] = useState([]);
 
@@ -26,13 +39,16 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
         setLoading(false)
 
         const userData = new FormData();
-        userData.append("email", email)
-        userData.append("password", password)
-        userData.append("cPassword", cPassword)
+        userData.append("first_name", user.firstName)
+        userData.append("last_name", user.lastName)
+        userData.append("email", user.email)
+        userData.append("password", user.password)
+        userData.append("cPassword", user.cPassword)
 
         axios.post("http://localhost:5000/register", userData)
             .then(res => {
                 console.log(res.data);
+                localStorage.setItem("token", res.data.token)
                 router.push("/dashboard")
                 setLoading(false)
             })
@@ -72,25 +88,42 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
                         })
                     }
 
+                    <div className='flex w-full gap-5'>
+                        <input
+                            type="text"
+                            placeholder='First Name'
+                            className='input-reg'
+                            value={user.firstName}
+                            onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+                        />
+                        <input
+                            type="text"
+                            placeholder='Last Name'
+                            className='input-reg'
+                            value={user.lastName}
+                            onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+                        />
+                    </div>
+
                     <input
                         type="text"
                         placeholder='Email'
                         className='input-reg'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={user.email}
+                        onChange={(e) => setUser({ ...user, email: e.target.value })}
                     />
                     <input
                         type="text"
                         placeholder='Password'
                         className='input-reg'
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={user.password}
+                        onChange={(e) => setUser({ ...user, password: e.target.value })}
                     />
                     <input type="text"
                         placeholder='Confirm Password'
                         className='input-reg'
-                        value={cPassword}
-                        onChange={(e) => setCPassword(e.target.value)}
+                        value={user.cPassword}
+                        onChange={(e) => setUser({ ...user, cPassword: e.target.value })}
                     />
 
                     <button className='w-3/4 bg-green-600 hover:bg-green-600 active:translate-y-0.5 p-2 rounded-md font-bold self-center'>Sign Up</button>
