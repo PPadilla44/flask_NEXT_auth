@@ -2,11 +2,16 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 
+interface User {
+    id: string
+    email: string
+}
+
 const dashboard = () => {
 
     const router = useRouter();
 
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
 
@@ -50,7 +55,7 @@ const dashboard = () => {
                         users.map((item, i) => {
                             return (
                                 <tr key={i}>
-                                    <td>{item.public_id}</td>
+                                    <td>{item.id}</td>
                                     <td>{item.email}</td>
                                 </tr>
                             )

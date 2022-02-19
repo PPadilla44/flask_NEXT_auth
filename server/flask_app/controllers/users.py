@@ -71,7 +71,7 @@ def get_all(curr_user):
     output = []
     for one_user in all_users:
         output.append({
-            "public_id": one_user.id,
+            "id": one_user.id,
             "email": one_user.email
         })
 
@@ -95,7 +95,7 @@ def login():
         return jsonify(errors), 401
 
     token = jwt.encode({
-        "public_id": get_user.id,
+        "id": get_user.id,
         "exp": datetime.utcnow() + timedelta(minutes=30)
     }, app.secret_key, algorithm="HS256")
 
