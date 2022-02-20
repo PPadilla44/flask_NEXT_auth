@@ -1,19 +1,23 @@
 import Link from "next/link";
-import { useUser } from "../components/user";
+import { TailSpin } from "react-loader-spinner";
+import useUser from "../lib/useUser";
 
-interface User {
-    id: string,
-    first_name: string,
-    last_name: string,
-    email: string,
-}
 
 const Profile = () => {
 
-    const user: User | null = useUser();
+    const { user, isValidating } = useUser({
+        redirectTo: "/"
+    });
+    console.log(user?.isLoggedIn);
 
 
-    console.log(user);
+    if (!user?.isLoggedIn || isValidating) {
+        return (
+            <div>
+                <TailSpin />
+            </div>
+        )
+    }
 
 
     return (
@@ -21,19 +25,11 @@ const Profile = () => {
             <Link href={"/"}  >HOMe</Link>
 
             <h1>Your Profile </h1>
-            {user!.first_name}
+            <h1>{user?.first_name}</h1>
         </div>
     )
 
 }
 
-export async function getStaticProps(context: any) {
-
-    return {
-        props: {
-            protected: true
-        }
-    };
-}
 
 export default Profile

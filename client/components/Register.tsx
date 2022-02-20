@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Icon } from "@iconify/react"
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 interface Props {
     toggleReg: Dispatch<SetStateAction<boolean>>
@@ -30,6 +31,7 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
 
 
     const [errors, setErrors] = useState([]);
+    const [cookie, setCookie] = useCookies(["token"])
 
     const [loading, setLoading] = useState(false);
 
@@ -47,8 +49,7 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
 
         axios.post("http://localhost:5000/register", userData)
             .then(res => {
-                console.log(res.data);
-                localStorage.setItem("token", res.data.token)
+                setCookie("token", res.data.token)
                 router.push("/dashboard")
                 setLoading(false)
             })
@@ -138,3 +139,4 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
 }
 
 export default Register
+

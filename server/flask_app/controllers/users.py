@@ -38,6 +38,7 @@ def token_required(f):
 @app.route("/auth")
 @token_required
 def get_auth(curr_user):
+    print(curr_user)
     return jsonify( curr_user )
 
 

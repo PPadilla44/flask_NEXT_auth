@@ -1,12 +1,16 @@
 import axios from 'axios'
 import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction, useState } from 'react'
+import useUser from '../lib/useUser';
+import { useCookies } from 'react-cookie';
 
 interface Props {
     toggleReg: Dispatch<SetStateAction<boolean>>
 }
 
 const Login: React.FC<Props> = ({ toggleReg }) => {
+
+    const [cookie, setCookie] = useCookies(["token"])
 
     const router = useRouter();
 
@@ -27,28 +31,31 @@ const Login: React.FC<Props> = ({ toggleReg }) => {
 
         axios.post("http://localhost:5000/login", userData)
             .then(res => {
-                localStorage.setItem("token", res.data.token)
+                setCookie("token", res.data.token)
                 setLoading(false)
                 router.push("/dashboard")
             })
             .catch(err => {
-                
+
                 setErrors(err.response.data)
                 setLoading(false)
             })
 
     }
+
+
+
     return (
         <div className='w-96 bg-white text-white shadow-md rounded-md p-10 text-lg'>
 
             <form onSubmit={handleLogin} className='flex flex-col gap-5'>
 
                 {
-                errors.map((item, i) => {
-                    return (
-                        <p key={i} className="text-center text-red-700">{item}</p>
-                    )
-                })
+                    errors.map((item, i) => {
+                        return (
+                            <p key={i} className="text-center text-red-700">{item}</p>
+                        )
+                    })
                 }
                 <input
                     type="email"

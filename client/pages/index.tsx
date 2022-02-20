@@ -2,38 +2,32 @@ import type { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 import Login from '../components/Login'
 import Register from '../components/Register'
-import { useUser } from '../components/user';
 import { useRouter } from 'next/router';
 import { TailSpin } from "react-loader-spinner";
+import useUser from '../lib/useUser';
 
 
 
 const Home: NextPage = () => {
 
-  const router = useRouter();
-  const user = useUser();
-  console.log(user);
+  const { user, isValidating } = useUser({
+    redirectTo: "/profile",
+    redirectIfFound: true,
+  });
 
 
   const [showReg, setShowReg] = useState(false);
-  const [loading, setLoading] = useState(true);
 
 
-  useEffect(() => {
-    if (user) {
-      setLoading(false);
-      router.push("/profile")
-    }
-
-
-  }, [user, router])
-
-  if (loading) {
+  if (user?.isLoggedIn || isValidating) {
     return (
-      <TailSpin color="#00BFFF" height={80} width={80} />
+      <div>
+        <TailSpin />
+      </div>
     )
   }
 
+  console.log("ASDS");
 
   return (
     <div className='flex justify-center bg-gray-200 w-screen h-screen overflow-hidden'>

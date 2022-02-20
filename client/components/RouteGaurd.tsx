@@ -1,7 +1,7 @@
-import { route } from 'next/dist/server/router';
 import { useRouter } from 'next/router'
 import { FC, ReactNode, useEffect, useState } from 'react'
-import { useUser } from './user';
+import  useUser  from '../lib/useUser';
+
 interface User {
     id: string,
     first_name: string,
@@ -10,14 +10,14 @@ interface User {
 }
 interface Props {
     children?: ReactNode | any
-    user : User | null
 }
 
-const RouteGaurd: FC<Props> = ({ children, user }) => {
+const RouteGaurd: FC<Props> = ({ children }) => {
 
-    console.log("BLK,", user);
     
     const router = useRouter();
+
+    const user = null;
 
     const [authorized, setAuthorized] = useState(false);
 
