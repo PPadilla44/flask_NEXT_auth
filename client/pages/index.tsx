@@ -1,33 +1,14 @@
-import type { NextPage } from 'next'
-import { useEffect, useState } from 'react'
+import type { GetServerSideProps, NextPage } from 'next'
+import { useState } from 'react'
 import Login from '../components/Login'
 import Register from '../components/Register'
-import { useRouter } from 'next/router';
-import { TailSpin } from "react-loader-spinner";
-import useUser from '../lib/useUser';
+import getUser from '../lib/getUser';
 
 
 
 const Home: NextPage = () => {
 
-  const { user, isValidating } = useUser({
-    redirectTo: "/profile",
-    redirectIfFound: true,
-  });
-
-
   const [showReg, setShowReg] = useState(false);
-
-
-  if (user?.isLoggedIn || isValidating) {
-    return (
-      <div>
-        <TailSpin />
-      </div>
-    )
-  }
-
-  console.log("ASDS");
 
   return (
     <div className='flex justify-center bg-gray-200 w-screen h-screen overflow-hidden'>
@@ -47,6 +28,26 @@ const Home: NextPage = () => {
   )
 }
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+
+  const cookies = context.req.cookies;
+  const user = await getUser({ cookies })
+
+  if (user.isLoggedIn) {
+    return {
+      redirect: {
+        destination: "/profile",
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+    }
+  }
+
+}
 
 
 export default Home

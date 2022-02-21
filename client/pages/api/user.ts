@@ -1,7 +1,5 @@
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { useEffect } from 'react';
-import cookie from "cookie"
 
 export type User = {
   isLoggedIn: boolean
@@ -14,41 +12,41 @@ export type User = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<User>) {
 
-  
+  const { token } = req.headers;
 
-  const { token } = cookie.parse(req ? req.headers.cookie || "": document.cookie)
-
-  
   console.log(token);
-  console.log("TRYING");
+
   if (token) {
-    console.log("IN");
 
     const headers = {
-      "X-Auth-Token": token,
+      "X-Auth-Token": token as string,
       "content-type": "application/json"
     }
-    
 
     try {
+
+      console.log("FETCHING");
       
-      
-      const { data } = await axios.get("http://localhost:5000/auth", { headers: headers})
-      console.log("FSYS", data);
-      
-      
+      const { data } = await axios.get<User>("http://localhost:5000/auth", { headers: headers })
+
       res.json({
         ...data,
         isLoggedIn: true
       })
     } catch (err) {
       console.log(err);
+      res.json({
+        isLoggedIn: false,
+        id: "",
+        first_name: "",
+        last_name: "",
+        email: "",
+      })
     }
-    // in a real world application you might read the user id from the session and then do a database request
-    // to get more information on the user if needed
+
 
   } else {
-    
+
     res.json({
       isLoggedIn: false,
       id: "",

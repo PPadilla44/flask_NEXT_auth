@@ -1,14 +1,13 @@
 import axios from 'axios'
 import { useRouter } from 'next/router';
-import React, { Dispatch, SetStateAction, useState } from 'react'
-import useUser from '../lib/useUser';
+import { Dispatch, SetStateAction, useState, FC } from 'react'
 import { useCookies } from 'react-cookie';
 
 interface Props {
     toggleReg: Dispatch<SetStateAction<boolean>>
 }
 
-const Login: React.FC<Props> = ({ toggleReg }) => {
+const Login: FC<Props> = ({ toggleReg }) => {
 
     const [cookie, setCookie] = useCookies(["token"])
 

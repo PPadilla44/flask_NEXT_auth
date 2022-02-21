@@ -1,14 +1,12 @@
-from datetime import datetime, timedelta
-from distutils.log import error
 from flask_app import app, bcrypt
-from flask import jsonify, make_response, request
+from flask import jsonify, request
 from flask_app.models import user
 import jwt
 from functools import wraps
 
+
+
 # decorator for verifying the JWT
-
-
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -38,7 +36,6 @@ def token_required(f):
 @app.route("/auth")
 @token_required
 def get_auth(curr_user):
-    print(curr_user)
     return jsonify( curr_user )
 
 
