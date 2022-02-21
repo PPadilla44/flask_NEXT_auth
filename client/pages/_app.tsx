@@ -1,17 +1,19 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import Nav from '../components/Nav';
+import Nav from '../components/Nav'
 
 function MyApp({ Component, pageProps, router }: AppProps) {
 
 
 
+  if (router.pathname === "/") {
+    return <Component {...pageProps} />
+  }
+
   return (
     <>
-
-        <Nav/>
-        <Component {...pageProps} />
-
+      <Nav {...pageProps} />
+      <Component {...pageProps} />
     </>
   )
 

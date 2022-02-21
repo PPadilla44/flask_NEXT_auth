@@ -1,64 +1,54 @@
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
+import React, { FC } from 'react'
+import { GetServerSideProps } from 'next';
+import getUser from '../lib/getUser';
+import { User } from './api/user';
+import CreatePost from '../components/CreatePost/CreatePost';
 
-interface User {
-    id: string,
-    first_name: string,
-    last_name: string,
-    email: string,
+interface Props {
+    user: User
 }
 
-const Dashboard = () => {
+const Dashboard: FC<Props> = ({ user }) => {
 
-    const router = useRouter();
-
-    
-
-    const [users, setUsers] = useState<User[]>([]);
-
-
-    useEffect(() => {
-
-
-        axios.get("http://localhost:5000/users")
-            .then(res => {
-                setUsers(res.data);
-            })
-            .catch((err) => {
-                console.log(err.response.data);
-                router.push("/")
-            })
-
-    }, [router])
 
     return (
-        <div className='flex justify-center items-center flex-col bg-gray-200 w-screen h-screen overflow-hidden'>
-            <button
-                className='bg-green-500 w-fit rounded-md p-2 text-lg font-bold'
-                onClick={() => {
-                    localStorage.removeItem("token");
-                    router.push("/")
-                }}
-            >Log Out</button>
 
-            <div className='max-w-6xl bg-white h-full w-full text-black'>
-                {
-                    users.map((item, i) => {
-                        return (
+        <div className='flex justify-center items-center flex-col bg-gray-200 w-full h-screen overflow-hidden'>
 
-                            <div key={i}>
-                                <h3>{`${item.first_name} ${item.last_name}`}</h3>
-                                <h3>{item.email}</h3>
-                            </div>
-                        )
-                    })
-                }
+            <div className='max-w-4xl h-full w-full flex flex-col items-center'>
+
+                <div className='max-w-lg w-full mt-4'>
+
+                    <CreatePost user={user} />
+                </div>
+
+
             </div>
-
 
         </div>
     )
+}
+
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+
+    const cookies = context.req.cookies;
+    const user = await getUser({ cookies })
+
+    if (user.isLoggedIn) {
+        return {
+            props: {
+                user
+            }
+        }
+    }
+
+    return {
+        redirect: {
+            destination: "/",
+            permanent: false
+        }
+    }
 }
 
 export default Dashboard
