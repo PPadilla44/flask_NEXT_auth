@@ -1,13 +1,15 @@
-import axios from 'axios'
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useState, FC } from 'react'
 import { useCookies } from 'react-cookie';
+import { useAuth } from './contexts/UserContext';
 
 interface Props {
     toggleReg: Dispatch<SetStateAction<boolean>>
 }
 
 const Login: FC<Props> = ({ toggleReg }) => {
+
+    const { login } = useAuth()
 
     const [cookie, setCookie] = useCookies(["token"])
 
@@ -16,29 +18,30 @@ const Login: FC<Props> = ({ toggleReg }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const [errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState<string[]>([]);
 
     const [loading, setLoading] = useState(false);
 
-    const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true)
 
-        const userData = new FormData();
-        userData.append("email", email)
-        userData.append("password", password)
+        if (!email || !password) {
+            setErrors(['Invalid Login'])
+            return
+        }
 
-        axios.post("http://localhost:5000/login", userData)
-            .then(res => {
-                setCookie("token", res.data.token)
-                setLoading(false)
-                router.push("/dashboard")
-            })
-            .catch(err => {
+        const userData = { email, password };
 
-                setErrors(err.response.data)
-                setLoading(false)
-            })
+        try {
+            const res = await login(userData)
+            setCookie("token", res.data.token)
+            setLoading(false)
+            router.push("/dashboard")
+        } catch (err: any) {
+            setErrors(err.response.data)
+            setLoading(false)
+        }
 
     }
 

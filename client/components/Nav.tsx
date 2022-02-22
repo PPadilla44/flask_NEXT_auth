@@ -3,15 +3,13 @@ import React from 'react'
 import { Icon } from "@iconify/react"
 import { useCookies } from 'react-cookie'
 import { useRouter } from 'next/router'
-import { User } from '../pages/api/user'
-import { FC } from 'react'
+import { useAuth } from './contexts/UserContext'
 
-interface Props {
-    user: User
-}
 
-const Nav: FC<Props> = ({user}) => {
+const Nav = () => {
     
+    
+    const { user } = useAuth();
 
     const [cookie, setCookie, removeCookie] = useCookies(["token"])
     const router = useRouter();

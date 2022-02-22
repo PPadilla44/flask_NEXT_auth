@@ -2,7 +2,7 @@ import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export type User = {
-  isLoggedIn: boolean
+  isLoggedIn: boolean,
   id: string,
   first_name: string,
   last_name: string,
@@ -14,8 +14,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   const { token } = req.headers;
 
-  console.log(token);
-
   if (token) {
 
     const headers = {
@@ -26,12 +24,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     try {
 
       console.log("FETCHING");
-      
+
       const { data } = await axios.get<User>("http://localhost:5000/auth", { headers: headers })
 
       res.json({
         ...data,
-        isLoggedIn: true
+        isLoggedIn: true,
       })
     } catch (err) {
       console.log(err);

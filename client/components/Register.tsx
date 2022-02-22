@@ -1,14 +1,15 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Icon } from "@iconify/react"
-import axios from 'axios';
 import { useCookies } from 'react-cookie';
+import { validateReg } from '../lib/Auth';
+import { useAuth } from './contexts/UserContext';
 
 interface Props {
     toggleReg: Dispatch<SetStateAction<boolean>>
 }
 
-interface User {
+export interface UserReg {
     firstName: string,
     lastName: string,
     email: string,
@@ -20,8 +21,9 @@ interface User {
 const Register: React.FC<Props> = ({ toggleReg }) => {
 
     const router = useRouter();
+    const { register } = useAuth();
 
-    const [user, setUser] = useState<User>({
+    const [user, setUser] = useState<UserReg>({
         firstName: "",
         lastName: "",
         email: "",
@@ -30,33 +32,32 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
     });
 
 
-    const [errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState<string[]>([]);
     const [cookie, setCookie] = useCookies(["token"])
 
     const [loading, setLoading] = useState(false);
 
-    const handleReg = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleReg = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        setLoading(false)
+        setLoading(true)
 
-        const userData = new FormData();
-        userData.append("first_name", user.firstName)
-        userData.append("last_name", user.lastName)
-        userData.append("email", user.email)
-        userData.append("password", user.password)
-        userData.append("cPassword", user.cPassword)
+        const validationErrors = validateReg(user);
 
-        axios.post("http://localhost:5000/register", userData)
-            .then(res => {
-                setCookie("token", res.data.token)
-                router.push("/dashboard")
-                setLoading(false)
-            })
-            .catch(err => {
-                setErrors(err.response.data)
-                setLoading(false)
-            })
+        if (validationErrors.length > 0) {
+            setErrors(validationErrors)
+            return
+        }
+
+        try {
+            const res = await register(user)
+            setCookie("token", res.data.token)
+            setLoading(false)
+            router.push("/dashboard")
+        } catch (err: any) {
+            setErrors(err.response.data)
+            setLoading(false)
+        }
 
     }
 

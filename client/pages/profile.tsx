@@ -1,22 +1,17 @@
-import { GetServerSideProps, GetStaticProps } from "next";
-import { FC } from "react";
-import Nav from "../components/Nav";
-import getUser from "../lib/getUser";
-import { User } from "./api/user";
+import { GetServerSideProps } from "next";
+import { useAuth } from "../components/contexts/UserContext";
 
-interface Props {
-    user: User
-}
+const Profile = () => {
 
-const Profile: FC<Props> = ({ user }) => {
+    const { user } = useAuth();
 
-    console.log(user);
+    console.log("PROFILE", user);
 
     return (
 
         <div className="bg-slate-200" >
             <h1>Your Profile </h1>
-            <h1>{user?.first_name}</h1>
+            <h1>{user.first_name}</h1>
         </div>
     )
 
@@ -25,21 +20,18 @@ const Profile: FC<Props> = ({ user }) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const cookies = context.req.cookies;
-    const user = await getUser({ cookies })
 
-    if (user.isLoggedIn) {
+    if (!cookies.token) {
         return {
-            props: {
-                user
+            redirect: {
+                destination: "/",
+                permanent: false
             }
         }
     }
 
     return {
-        redirect: {
-            destination: "/",
-            permanent: false
-        }
+        props: {}
     }
 }
 

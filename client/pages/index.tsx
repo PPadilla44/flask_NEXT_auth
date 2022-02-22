@@ -2,7 +2,6 @@ import type { GetServerSideProps, NextPage } from 'next'
 import { useState } from 'react'
 import Login from '../components/Login'
 import Register from '../components/Register'
-import getUser from '../lib/getUser';
 
 
 
@@ -31,22 +30,19 @@ const Home: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const cookies = context.req.cookies;
-  const user = await getUser({ cookies })
 
-  if (user.isLoggedIn) {
-    return {
-      redirect: {
-        destination: "/profile",
-        permanent: false
+  if (cookies.token) {
+      return {
+          redirect: {
+              destination: "/profile",
+              permanent: false
+          }
       }
-    }
   }
 
   return {
-    props: {
-    }
+      props: {}
   }
-
 }
 
 

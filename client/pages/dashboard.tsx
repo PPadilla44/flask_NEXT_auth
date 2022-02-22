@@ -1,14 +1,19 @@
-import React, { FC } from 'react'
-import { GetServerSideProps } from 'next';
-import getUser from '../lib/getUser';
-import { User } from './api/user';
+import React from 'react'
 import CreatePost from '../components/CreatePost/CreatePost';
+import { useAuth } from '../components/contexts/UserContext';
 
-interface Props {
-    user: User
-}
 
-const Dashboard: FC<Props> = ({ user }) => {
+const Dashboard = () => {
+
+    const { user, isFetching } = useAuth();
+    console.log("DASH",user);
+    
+    if(isFetching) {
+        return (
+            <div>Loadoing</div>
+        )
+    }
+
 
 
     return (
@@ -27,28 +32,6 @@ const Dashboard: FC<Props> = ({ user }) => {
 
         </div>
     )
-}
-
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-
-    const cookies = context.req.cookies;
-    const user = await getUser({ cookies })
-
-    if (user.isLoggedIn) {
-        return {
-            props: {
-                user
-            }
-        }
-    }
-
-    return {
-        redirect: {
-            destination: "/",
-            permanent: false
-        }
-    }
 }
 
 export default Dashboard
