@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react'
 import axios from 'axios';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react'
+import { useCookies } from 'react-cookie';
 import { User } from '../../pages/api/user'
 
 interface Props {
@@ -14,6 +15,8 @@ const CreatePostForm: FC<Props> = ({ user, toggleForm }) => {
     const [text, setText] = useState("");
 
 
+    const [cookie, setCookie] = useCookies(["token"])
+
 
     const handleSubmit = async () => {
 
@@ -25,17 +28,30 @@ const CreatePostForm: FC<Props> = ({ user, toggleForm }) => {
         const data = new FormData();
 
         data.append("text", text);
-        data.append("users_id", user.id);
 
         toggleForm(false)
-        // try {
-        //     const res = axios.post("http://localhost:5000/posts")
-        //     console.log(res);
-            
-        // } catch (err) {
-        //     console.log(err);
-            
-        // }
+
+        const token = cookie.token
+
+
+        const headers = {
+            "X-Auth-Token": token as string,
+            "content-type": "application/json"
+        }
+
+        try {
+
+            console.log("POSTING");
+
+            // const { data } = await axios.get<User>("http://localhost:5000/auth", { headers: headers })
+
+            const res = axios.post("http://localhost:5000/posts", data, { headers: headers })
+            console.log(res);
+
+        } catch (err) {
+            console.log(err);
+
+        }
 
     }
 

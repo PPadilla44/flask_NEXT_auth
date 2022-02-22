@@ -1,6 +1,6 @@
 from flask_app import app
 from flask_cors import CORS
-from flask_app.controllers import users
+from flask_app.controllers import users, posts
 from flask_app.config.mysqlconnection import connectToMySQL
 
 CORS(app)
