@@ -28,12 +28,8 @@ const initialState: authContextType = {
     register
 }
 
-
 const UserContext = createContext<authContextType>(initialState);
 
-export const useAuth = () => {
-    return useContext(UserContext)
-}
 
 type Props = {
     children: ReactNode;
@@ -41,24 +37,29 @@ type Props = {
 
 export const UserProvider = ({ children }: Props) => {
 
-
     const [user, setUser] = useState<User>(initialState.user);
     const [isFetching, setIsFetching] = useState(initialState.isFetching)
 
     const [cookie, setCookie] = useCookies(["token"]);
 
-
     useEffect(() => {
-        
+        setIsFetching(true)
         console.log("FETCHN");
-        
-        getUser({ cookies: cookie })
-        .then(data => {
-                setUser(data)
-                setIsFetching(false)
-            })
-            .catch(err => console.log(err))
+        if (cookie.token) {
+            getUser({ cookies: cookie })
+                .then(data => {
+                    setUser(data)
+                    setIsFetching(false)
+                })
+                .catch(err => {
+                    console.log(err)
+                    setIsFetching(false)
+                })
 
+        } else {
+            setUser(initialState.user)
+            setIsFetching(false)
+        }
     }, [cookie])
 
     const value = {
@@ -76,3 +77,6 @@ export const UserProvider = ({ children }: Props) => {
     )
 }
 
+export const useAuth = () => {
+    return useContext(UserContext)
+}

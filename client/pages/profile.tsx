@@ -3,9 +3,15 @@ import { useAuth } from "../components/contexts/UserContext";
 
 const Profile = () => {
 
-    const { user } = useAuth();
+    const { user, isFetching } = useAuth();
 
-    console.log("PROFILE", user);
+    if (isFetching) {
+        return (
+            <div className='bg-gray-200 w-screen h-screen overflow-hidden text-center'>
+                <p>LOADING</p>
+            </div>
+        )
+    }
 
     return (
 

@@ -23,6 +23,9 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
     const router = useRouter();
     const { register } = useAuth();
 
+    console.log("REGISTEr");
+    
+
     const [user, setUser] = useState<UserReg>({
         firstName: "",
         lastName: "",
@@ -51,9 +54,8 @@ const Register: React.FC<Props> = ({ toggleReg }) => {
 
         try {
             const res = await register(user)
-            setCookie("token", res.data.token)
             setLoading(false)
-            router.push("/dashboard")
+            setCookie("token", res.data.token)
         } catch (err: any) {
             setErrors(err.response.data)
             setLoading(false)

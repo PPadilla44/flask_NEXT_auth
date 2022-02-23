@@ -9,17 +9,13 @@ interface Props {
 
 const Login: FC<Props> = ({ toggleReg }) => {
 
-    const { login } = useAuth()
+    const { login } = useAuth();
 
-    const [cookie, setCookie] = useCookies(["token"])
-
-    const router = useRouter();
-
+    const [cookie, setCookie] = useCookies(["token"]);
+    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const [errors, setErrors] = useState<string[]>([]);
-
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,11 +29,11 @@ const Login: FC<Props> = ({ toggleReg }) => {
 
         const userData = { email, password };
 
+
         try {
             const res = await login(userData)
-            setCookie("token", res.data.token)
             setLoading(false)
-            router.push("/dashboard")
+            setCookie("token", res.data.token)
         } catch (err: any) {
             setErrors(err.response.data)
             setLoading(false)

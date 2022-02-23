@@ -1,48 +1,30 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import { useState } from 'react'
-import Login from '../components/Login'
-import Register from '../components/Register'
+import { useAuth } from '../components/contexts/UserContext'
+import Dashboard from '../components/Dashboard'
+import LogReg from '../components/LogReg'
 
 
 
 const Home: NextPage = () => {
 
-  const [showReg, setShowReg] = useState(false);
+  const { user, isFetching } = useAuth();
+
+  if (isFetching) {
+    return (
+      <div className='bg-gray-200 w-screen h-screen overflow-hidden text-center'>
+        <p>LOADING</p>
+      </div>
+    )
+  }
+
+
 
   return (
-    <div className='flex justify-center bg-gray-200 w-screen h-screen overflow-hidden'>
-      <main className='flex flex-col items-center w-[1200px]' >
 
-        <div className='text-center flex gap-5 flex-col w-96 my-7'>
-          <h1 className='text-6xl text-blue-600 font-bold'>FLEAKT</h1>
-          <h4 className='text-2xl' >{"Welcome To Great World Of React And Flask Let's Do Authenification!"}</h4>
-        </div>
+    user.isLoggedIn ? <Dashboard /> : <LogReg />
 
-        <Login toggleReg={setShowReg} />
-
-        {showReg && <Register toggleReg={setShowReg} />}
-
-      </main>
-    </div>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-
-  const cookies = context.req.cookies;
-
-  if (cookies.token) {
-      return {
-          redirect: {
-              destination: "/profile",
-              permanent: false
-          }
-      }
-  }
-
-  return {
-      props: {}
-  }
 }
 
 

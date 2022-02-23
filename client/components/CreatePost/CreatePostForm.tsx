@@ -17,7 +17,6 @@ const CreatePostForm: FC<Props> = ({ user, toggleForm }) => {
 
     const [cookie, setCookie] = useCookies(["token"])
 
-
     const handleSubmit = async () => {
 
         if (text.length < 3) {
@@ -32,7 +31,6 @@ const CreatePostForm: FC<Props> = ({ user, toggleForm }) => {
         toggleForm(false)
 
         const token = cookie.token
-
 
         const headers = {
             "X-Auth-Token": token as string,

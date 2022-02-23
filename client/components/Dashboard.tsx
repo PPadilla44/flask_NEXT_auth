@@ -1,7 +1,6 @@
-import React, { FC } from 'react'
+import React, { useEffect, useState } from 'react'
 import CreatePost from '../components/CreatePost/CreatePost';
 import { useAuth } from '../components/contexts/UserContext';
-import { GetStaticProps } from 'next';
 import axios from 'axios';
 
 interface Post {
@@ -12,22 +11,22 @@ interface Post {
     users_id: number
 }
 
-interface Props {
-    posts: Post[]
-}
 
-const Dashboard: FC<Props> = ({ posts }) => {
 
-    const { user, isFetching } = useAuth();
+const Dashboard = () => {
 
-    if (isFetching) {
-        return (
-            <div>Loadoing</div>
-        )
-    }
+    const { user } = useAuth();
+    const [posts, setPosts] = useState<Post[]>([])
 
-    console.log(posts);
-    
+    useEffect(() => {
+
+        axios.get("http://localhost:5000/posts")
+            .then(res => setPosts(res.data))
+            .catch(err => console.log(err))
+
+    }, [])
+
+
 
 
     return (
@@ -41,7 +40,7 @@ const Dashboard: FC<Props> = ({ posts }) => {
                 </div>
 
                 {
-                    posts.map((item, i ) => {
+                    posts.map((item, i) => {
                         return (
                             <p key={i}>
                                 {item.text}
@@ -56,15 +55,5 @@ const Dashboard: FC<Props> = ({ posts }) => {
     )
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
-    
-    const res = await axios.get("http://localhost:5000/posts")
-
-    return {
-        props: {
-            posts: res.data
-        }
-    }
-}
 
 export default Dashboard

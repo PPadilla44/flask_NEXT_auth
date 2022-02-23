@@ -5,10 +5,6 @@ import { UserProvider } from '../components/contexts/UserContext'
 
 function MyApp({ Component, pageProps, router }: AppProps) {
 
-  if (router.pathname === "/") {
-    return <Component {...pageProps} />
-  }
-
   return (
     <UserProvider>
       <Nav {...pageProps} />

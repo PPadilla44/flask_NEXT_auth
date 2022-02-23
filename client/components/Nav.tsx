@@ -8,7 +8,6 @@ import { useAuth } from './contexts/UserContext'
 
 const Nav = () => {
     
-    
     const { user } = useAuth();
 
     const [cookie, setCookie, removeCookie] = useCookies(["token"])
@@ -19,11 +18,14 @@ const Nav = () => {
         router.push("/");
     }
 
+    if (!user.isLoggedIn) {
+        return <></>
+    }
+
     return (
         <nav className='bg-white h-14 w-full flex justify-end items-center px-4 relative shadow-md overflow-hidden'>
 
-
-            <Link href={"/dashboard"} passHref={true} >
+            <Link href={"/"} passHref={true} >
                 <Icon className='absolute left-1/2 cursor-pointer' width={48} height={48} icon={"ant-design:home-filled"} />
             </Link>
 
