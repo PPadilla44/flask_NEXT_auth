@@ -45,8 +45,8 @@ export const UserProvider = ({ children }: Props) => {
 
         setState(s => ({...s, isFetching: true }));
         
-        console.log("FETCHN");
         if (cookie.token) {
+            console.log("FETCHN");
             getUser({ cookies: cookie })
                 .then(data => setState(s => ({ ...s, user: data, isFetching: false }) ))
                 .catch(err => {

@@ -15,6 +15,7 @@ const Nav = () => {
 
     const logout = () => {
         removeCookie("token");
+        router.push("/")
     }
 
     if (!user.isLoggedIn) {

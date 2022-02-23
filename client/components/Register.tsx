@@ -20,11 +20,7 @@ export interface UserReg {
 
 const Register: React.FC<Props> = ({ toggleReg }) => {
 
-    const router = useRouter();
     const { register } = useAuth();
-
-    console.log("REGISTEr");
-    
 
     const [user, setUser] = useState<UserReg>({
         firstName: "",

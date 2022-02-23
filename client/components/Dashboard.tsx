@@ -20,39 +20,54 @@ const Dashboard = () => {
 
     useEffect(() => {
 
-        axios.get("http://localhost:5000/posts")
-            .then(res => setPosts(res.data))
-            .catch(err => console.log(err))
+        const source = axios.CancelToken.source();
 
-    }, [])
-
-
-
-
-    return (
-
-        <div className='flex justify-center items-center flex-col bg-gray-200 w-full h-screen overflow-hidden'>
-
-            <div className='max-w-4xl h-full w-full flex flex-col items-center'>
-
-                <div className='max-w-lg w-full mt-4'>
-                    <CreatePost user={user} />
-                </div>
-
-                {
-                    posts.map((item, i) => {
-                        return (
-                            <p key={i}>
-                                {item.text}
-                            </p>
-                        )
-                    })
+        const fetchPosts = async () => {
+            try {
+                const {data} = await axios.get("http://localhost:5000/posts", { cancelToken: source.token })
+                setPosts(data)
+            } catch (err) {
+                if (!axios.isCancel(err)) {
+                    console.log(err);
                 }
+            }
+        }
+        
+        fetchPosts();
 
+        return () => {
+            source.cancel()
+        }
+
+}, [])
+
+
+
+
+return (
+
+    <div className='flex justify-center items-center flex-col bg-gray-200 w-full h-screen overflow-hidden'>
+
+        <div className='max-w-4xl h-full w-full flex flex-col items-center'>
+
+            <div className='max-w-lg w-full mt-4'>
+                <CreatePost user={user} />
             </div>
 
+            {
+                posts.map((item, i) => {
+                    return (
+                        <p key={i}>
+                            {item.text}
+                        </p>
+                    )
+                })
+            }
+
         </div>
-    )
+
+    </div>
+)
 }
 
 
