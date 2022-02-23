@@ -37,36 +37,30 @@ type Props = {
 
 export const UserProvider = ({ children }: Props) => {
 
-    const [user, setUser] = useState<User>(initialState.user);
-    const [isFetching, setIsFetching] = useState(initialState.isFetching)
+    const [state, setState] = useState(initialState);
 
     const [cookie, setCookie] = useCookies(["token"]);
 
     useEffect(() => {
-        setIsFetching(true)
+
+        setState(s => ({...s, isFetching: true }));
+        
         console.log("FETCHN");
         if (cookie.token) {
             getUser({ cookies: cookie })
-                .then(data => {
-                    setUser(data)
-                    setIsFetching(false)
-                })
+                .then(data => setState(s => ({ ...s, user: data, isFetching: false }) ))
                 .catch(err => {
+                    setState(s => ({ ...s, isFetching: false }) )
                     console.log(err)
-                    setIsFetching(false)
                 })
 
         } else {
-            setUser(initialState.user)
-            setIsFetching(false)
+            setState(s => ({ ...s, isFetching: false, user: initialState.user }) );
         }
     }, [cookie])
 
     const value = {
-        user,
-        isFetching,
-        login,
-        register
+        ...state
     }
 
 
