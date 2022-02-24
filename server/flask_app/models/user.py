@@ -66,6 +66,11 @@ class User:
         VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password)s);"
         return connectToMySQL(DB).query_db(query, data)
 
+    @classmethod
+    def update_avatar(cls, data):
+        query = "UPDATE users SET avatar = %(avatar)s where id = %(id)s"
+        return connectToMySQL(DB).query_db(query, data)
+
     @staticmethod
     def register_validation(user):
 

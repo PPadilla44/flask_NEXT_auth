@@ -16,6 +16,7 @@ def token_required(f):
             token = request.headers['X-Auth-Token']
         # return 401 if token is not passed
         if not token:
+            print("NO TOKEN??")
             return jsonify({'message': 'Token is missing !!'}), 401
 
         try:
@@ -110,3 +111,17 @@ def login():
 
 
     return jsonify({"token": token }), 201
+
+@app.route("/users/avatar", methods=['POST'])
+@token_required
+def update_avatar(curr_user):
+
+    print(request.form)
+    data = {
+        **request.form,
+        "id": curr_user['id']
+    }
+
+    user.User.update_avatar(data)
+
+    return jsonify(MSG = "SUCCES")
