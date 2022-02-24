@@ -1,6 +1,6 @@
 import { User } from "../pages/api/user";
 import axios from "axios";
-import { UserReg } from "../components/Register";
+import { UserReg } from "../components/Home/Portal/Register";
 
 
 export const getUser = async ({ cookies = {} }) => {

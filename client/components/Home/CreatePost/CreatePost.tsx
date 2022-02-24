@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { User } from '../../pages/api/user'
+import { User } from '../../../pages/api/user'
 import CreatePostBtn from './CreatePostBtn'
 import CreatePostForm from './CreatePostForm'
 

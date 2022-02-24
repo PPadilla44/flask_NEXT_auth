@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react'
 import axios from 'axios';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react'
 import { useCookies } from 'react-cookie';
-import { User } from '../../pages/api/user'
+import { User } from '../../../pages/api/user'
 
 interface Props {
     user: User

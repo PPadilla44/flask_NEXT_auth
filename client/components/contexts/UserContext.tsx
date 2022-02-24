@@ -3,7 +3,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 import { useCookies } from 'react-cookie';
 import { getUser, login, register } from '../../lib/Auth';
 import { User } from '../../pages/api/user';
-import { UserReg } from '../Register';
+import { UserReg } from '../Home/Portal/Register';
 
 interface authContextType {
     isFetching: boolean
@@ -23,6 +23,7 @@ const initialState: authContextType = {
         first_name: "",
         last_name: "",
         email: "",
+        avatar: ""
     },
     login,
     register

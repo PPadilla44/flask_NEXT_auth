@@ -1,7 +1,6 @@
-import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useState, FC } from 'react'
 import { useCookies } from 'react-cookie';
-import { useAuth } from './contexts/UserContext';
+import { useAuth } from '../../contexts/UserContext';
 
 interface Props {
     toggleReg: Dispatch<SetStateAction<boolean>>

@@ -1,9 +1,8 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { useRouter } from 'next/router';
 import { Icon } from "@iconify/react"
 import { useCookies } from 'react-cookie';
-import { validateReg } from '../lib/Auth';
-import { useAuth } from './contexts/UserContext';
+import { validateReg } from '../../../lib/Auth';
+import { useAuth } from '../../contexts/UserContext';
 
 interface Props {
     toggleReg: Dispatch<SetStateAction<boolean>>

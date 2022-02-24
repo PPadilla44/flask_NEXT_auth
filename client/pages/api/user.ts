@@ -7,6 +7,7 @@ export type User = {
   first_name: string,
   last_name: string,
   email: string,
+  avatar: string,
 }
 
 
@@ -39,6 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         first_name: "",
         last_name: "",
         email: "",
+        avatar: ""
       })
     }
 
@@ -51,6 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       first_name: "",
       last_name: "",
       email: "",
+      avatar: ""
     })
   }
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import CreatePost from '../components/CreatePost/CreatePost';
-import { useAuth } from '../components/contexts/UserContext';
+import CreatePost from '../CreatePost/CreatePost';
+import { useAuth } from '../../contexts/UserContext';
 import axios from 'axios';
 
 interface Post {

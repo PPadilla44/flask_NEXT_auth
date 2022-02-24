@@ -1,8 +1,8 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import { useState } from 'react'
 import { useAuth } from '../components/contexts/UserContext'
-import Dashboard from '../components/Dashboard'
-import LogReg from '../components/LogReg'
+import Dashboard from '../components/Home/Dashboard/Dashboard'
+import LogReg from '../components/Home/Portal/Portal'
 
 
 

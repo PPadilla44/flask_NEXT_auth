@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react'
 import React, { Dispatch, FC, SetStateAction } from 'react'
-import { User } from '../../pages/api/user'
+import { User } from '../../../pages/api/user'
 
 interface Props {
   user: User

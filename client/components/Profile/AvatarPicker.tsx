@@ -1,31 +1,41 @@
 import { Icon } from '@iconify/react'
 import React from 'react'
+import useComponentVisible from '../../lib/useComponentVisible';
+import { useAuth } from '../contexts/UserContext';
+import PhotoToolTip from './PhotoToolTip'
+
 
 const AvatarPicker = () => {
+
+    const { ref, isComponentVisible, setIsComponentVisible} = useComponentVisible(false);
+
+    const { user } = useAuth();
     
     return (
-        <div className="w-40 h-40">
+        <div className="w-40 h-40" ref={ref}>
 
-            <div className="absolute bottom-0">
+            <button className="absolute bottom-0 bg-white rounded-full">
 
-                <div className=' relative'>
+                
+                <Icon
+                    onClick={() => setIsComponentVisible(true)}
+                    width={168}
+                    height={168}
+                    icon={"carbon:user-avatar-filled"}
+                />
+
+                <div className='bg-slate-200 p-2 rounded-full absolute bottom-3 right-3'>
                     <Icon
-                        className='bg-white rounded-full'
-                        width={168}
-                        height={168
-                        } icon={"carbon:user-avatar-filled"}
+                        icon={"ant-design:camera-filled"}
+                        width={24}
+                        height={24}
                     />
-
-                    <div className='bg-slate-200 p-2 rounded-full absolute bottom-3 right-3'>
-                        <Icon
-                            icon={"ant-design:camera-filled"}
-                            width={24}
-                            height={24}
-                        />
-                    </div>
                 </div>
 
-            </div>
+            </button>
+
+            {isComponentVisible && <PhotoToolTip />}
+
         </div>
     )
 }
