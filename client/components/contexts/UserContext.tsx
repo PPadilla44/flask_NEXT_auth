@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { getUser, login, register } from '../../lib/Auth';
 import { User } from '../../pages/api/user';
@@ -13,6 +13,7 @@ interface authContextType {
         password: string;
     }) => Promise<AxiosResponse<any, any>>
     register: (data: UserReg) => Promise<AxiosResponse<any, any>>
+    mutateUser: Dispatch<SetStateAction<authContextType>> | null
 }
 
 const initialState: authContextType = {
@@ -26,7 +27,8 @@ const initialState: authContextType = {
         avatar: ""
     },
     login,
-    register
+    register,
+    mutateUser: null
 }
 
 const UserContext = createContext<authContextType>(initialState);
@@ -60,8 +62,11 @@ export const UserProvider = ({ children }: Props) => {
         }
     }, [cookie])
 
-    const value = {
-        ...state
+    const value: authContextType = {
+        
+        ...state,
+        mutateUser: setState
+        
     }
 
 
