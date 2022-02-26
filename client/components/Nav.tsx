@@ -23,7 +23,7 @@ const Nav = () => {
     }
 
     return (
-        <nav className='bg-white h-14 w-full flex justify-end items-center px-4 relative shadow-md overflow-hidden'>
+        <nav className='bg-white h-14 w-full flex justify-end items-center px-4 fixed shadow-md overflow-hidden'>
 
             <Link href={"/"} passHref={true} >
                 <Icon className='absolute left-1/2 cursor-pointer' width={48} height={48} icon={"ant-design:home-filled"} />

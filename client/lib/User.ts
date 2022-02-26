@@ -1,3 +1,4 @@
+import { data } from "autoprefixer";
 import axios from "axios";
 
 export const uploadAvatar = async ({ imageBlob, uploadPreset, token }: { imageBlob: Blob, uploadPreset: string, token: string }) => {
@@ -25,6 +26,5 @@ const uploadAviDB = async ({ url, token }: { url: string, token: string }) => {
         "content-type": "application/json"
     }
 
-    return await axios.post("http://localhost:5000/users/avatar", userData, { headers: headers });
-
+    return { response: await axios.post("http://localhost:5000/users/avatar", userData, { headers: headers } ) , url};
 }

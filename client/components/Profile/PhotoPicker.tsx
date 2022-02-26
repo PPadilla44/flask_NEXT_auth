@@ -1,10 +1,10 @@
 import { Icon } from '@iconify/react'
-import axios from 'axios';
 import React, { ChangeEvent, Dispatch, forwardRef, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import Image from 'next/image';
 import { useAuth } from '../contexts/UserContext';
 import { uploadAvatar } from '../../lib/User';
+import { TailSpin } from "react-loader-spinner"
 
 
 const PhotoPicker = forwardRef<HTMLDivElement, { setShowPicker: Dispatch<React.SetStateAction<boolean>> }>
@@ -42,15 +42,15 @@ const PhotoPicker = forwardRef<HTMLDivElement, { setShowPicker: Dispatch<React.S
                     uploadPreset: "my-uploads",
                     token: cookie.token
                 }
-                const { data } = await uploadAvatar(uploadData);
-                console.log(data);
+                const { url, response } = await uploadAvatar(uploadData);
+                console.log(response.data);
 
 
                 if (mutateUser) {
                     mutateUser(m => (
                         {
                             ...m, user:
-                                { ...m.user, avatar: data.url }
+                                { ...m.user, avatar: url }
                         }
                     ))
                 }
@@ -69,66 +69,93 @@ const PhotoPicker = forwardRef<HTMLDivElement, { setShowPicker: Dispatch<React.S
             <>
                 <div className='bg-slate-50 w-full h-full fixed opacity-75 left-0 top-0' />
 
-                <div ref={ref} className='flex flex-col gap-4 opacity-100 w-full max-w-2xl bg-white  shadow-lg rounded-md p-3 text-lg fixed z-50 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2'>
-                    <div className='flex items-center justify-center relative font-medium text-xl'>
-                        <p>Update profile picture</p>
-                        <Icon className=
-                            'absolute right-2 text-gray-500 cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-full p-1'
-                            icon="codicon:chrome-close"
-                            height={36}
-                            width={36}
-                            onClick={() => setShowPicker(false)}
-                        />
-                    </div>
-
-                    <hr />
-
-                    <div className='flex justify-center flex-col items-center gap-5'>
-
-                        <button
-                            onClick={handlePicker}
-                            className='w-64 self-center rounded-lg justify-center p-2 flex items-center gap-2 bg-sky-50 hover:bg-slate-100 text-blue-700 font-medium'>
-                            <Icon
-                                icon="carbon:add-alt"
-                                height={24}
-                                width={24}
-                                onClick={() => setShowPicker(false)}
-                            />
-                            <p>Upload Photo</p>
-                        </button>
-
-                        <Image
-                            className='object-cover rounded-full'
-                            src={image ? image : user.avatar}
-                            layout="fixed"
-                            width={300}
-                            height={300}
-                            alt="Temp-prof"
-                        />
-
-                        <input
-                            type='file'
-                            accept="image/png, image/jpeg"
-                            ref={inputFile}
-                            style={{ display: 'none' }}
-                            onChange={handleImage}
-                        />
-                    </div>
 
 
-                    <hr />
+                <div ref={ref} className='flex flex-col opacity-100 w-full max-w-2xl bg-white  shadow-lg rounded-md p-3 text-lg fixed z-50 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2'>
+                    <div className='flex flex-col h-[500px] gap-4'>
+                        {
+                            loading ?
+                                <div className='flex items-center justify-center h-full'>
+                                    <TailSpin
+                                        height={200}
+                                        width={200}
+                                    />
+                                </div>
+                                :
+                                <>
+                                    <div className='flex items-center justify-center relative font-medium text-xl'>
+                                        <p>Update profile picture</p>
+                                        <Icon className=
+                                            'absolute right-2 text-gray-500 cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-full p-1'
+                                            icon="codicon:chrome-close"
+                                            height={36}
+                                            width={36}
+                                            onClick={() => setShowPicker(false)}
+                                        />
+                                    </div>
 
-                    <div className='flex gap-3 self-end'>
+                                    <hr />
 
-                        <button
-                            onClick={() => setShowPicker(false)}
-                            className='text-blue-400 w-fit  py-1 px-6 rounded-md
-                        font-medium hover:bg-slate-50 self-end'>Cancel</button>
-                        <button
-                            onClick={handleUpload}
-                            className='text-white w-fit bg-blue-500 py-1 px-6 rounded-md
-                        font-bold hover:bg-blue-600 self-end'>Save</button>
+                                    <div className='flex justify-center flex-col items-center gap-5 h-[375px]'>
 
+                                        <button
+                                            onClick={handlePicker}
+                                            className='w-64 self-center rounded-lg justify-center p-2 flex items-center gap-2 bg-sky-50 hover:bg-slate-100 text-blue-700 font-medium'>
+                                            <Icon
+                                                icon="carbon:add-alt"
+                                                height={24}
+                                                width={24}
+                                                onClick={() => setShowPicker(false)}
+                                            />
+                                            <p>Upload Photo</p>
+                                        </button>
+
+                                        {
+                                            user.avatar || image ?
+
+                                                <Image
+                                                    className='object-cover rounded-full'
+                                                    src={image ? image : user.avatar}
+                                                    layout="fixed"
+                                                    width={300}
+                                                    height={300}
+                                                    alt="Temp-prof"
+                                                />
+                                                :
+                                                <Icon
+                                                    className='bg-white rounded-full'
+                                                    width={300}
+                                                    height={300}
+                                                    icon={"carbon:user-avatar-filled"}
+                                                />
+                                        }
+
+                                        <input
+                                            type='file'
+                                            accept="image/png, image/jpeg"
+                                            ref={inputFile}
+                                            style={{ display: 'none' }}
+                                            onChange={handleImage}
+                                        />
+                                    </div>
+
+
+                                    <hr />
+
+                                    <div className='flex gap-3 self-end'>
+
+                                        <button
+                                            onClick={() => setShowPicker(false)}
+                                            className='text-blue-400 w-fit  py-1 px-6 rounded-md
+                                    font-medium hover:bg-slate-50 self-end'>Cancel</button>
+                                        <button
+                                            onClick={handleUpload}
+                                            className='text-white w-fit bg-blue-500 py-1 px-6 rounded-md
+                                    font-bold hover:bg-blue-600 self-end'>Save</button>
+
+                                    </div>
+                                </>
+                        }
                     </div>
 
                 </div>
