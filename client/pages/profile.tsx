@@ -1,10 +1,12 @@
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import { useAuth } from "../components/contexts/UserContext";
 import ProfileHeader from "../components/Profile/ProfileHeader";
 
 const Profile = () => {
 
-    const { isFetching } = useAuth();
+    const { isFetching, user } = useAuth();
+    const router = useRouter();
 
     if (isFetching) {
         return (
@@ -14,8 +16,18 @@ const Profile = () => {
         )
     }
 
+    if (!user.isLoggedIn && !isFetching) {
+        router.push('/')
+        
+        return (
+            <div className='bg-gray-200 w-screen h-screen overflow-hidden text-center'>
+                <p>LOADING</p>
+            </div>
+        )
+    }
+
     return (
-        <div className="bg-slate-200 w-full h-screen" >
+        <div className="bg-slate-200 w-full h-screen pt-14" >
 
             <ProfileHeader />
 

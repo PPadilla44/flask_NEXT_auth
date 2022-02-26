@@ -116,12 +116,24 @@ def login():
 @token_required
 def update_avatar(curr_user):
 
-    print(request.form)
     data = {
         **request.form,
         "id": curr_user['id']
     }
 
     user.User.update_avatar(data)
+
+    return jsonify(MSG = "SUCCES")
+
+@app.route("/users/cover", methods=['POST'])
+@token_required
+def update_cover(curr_user):
+
+    data = {
+        **request.form,
+        "id": curr_user['id']
+    }
+
+    user.User.update_cover(data)
 
     return jsonify(MSG = "SUCCES")

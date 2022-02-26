@@ -24,7 +24,8 @@ const initialState: authContextType = {
         first_name: "",
         last_name: "",
         email: "",
-        avatar: ""
+        avatar: "",
+        cover_photo: "",
     },
     login,
     register,

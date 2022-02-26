@@ -12,6 +12,7 @@ class User:
         self.first_name = data["first_name"]
         self.last_name = data["last_name"]
         self.avatar = data["avatar"]
+        self.cover_photo = data["cover_photo"]
         self.email = data["email"]
         self.password = data["password"]
         self.created_at = data["created_at"]
@@ -27,6 +28,7 @@ class User:
             "password": self.password,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
+            "cover_photo": self.cover_photo
         }
 
     @classmethod
@@ -69,6 +71,11 @@ class User:
     @classmethod
     def update_avatar(cls, data):
         query = "UPDATE users SET avatar = %(avatar)s where id = %(id)s"
+        return connectToMySQL(DB).query_db(query, data)
+
+    @classmethod
+    def update_cover(cls, data):
+        query = "UPDATE users SET cover_photo = %(cover_photo)s where id = %(id)s"
         return connectToMySQL(DB).query_db(query, data)
 
     @staticmethod

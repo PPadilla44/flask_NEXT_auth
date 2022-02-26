@@ -46,7 +46,7 @@ const Dashboard = () => {
 
 return (
 
-    <div className='flex justify-center items-center flex-col bg-gray-200 w-full h-screen overflow-hidden'>
+    <div className='pt-14 flex justify-center items-center flex-col bg-gray-200 w-full h-screen overflow-hidden'>
 
         <div className='max-w-4xl h-full w-full flex flex-col items-center'>
 

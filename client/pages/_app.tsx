@@ -8,9 +8,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <UserProvider>
       <Nav {...pageProps} />
-      <div className='pt-14'>
-        <Component {...pageProps} />
-      </div>
+      <Component {...pageProps} />
     </UserProvider>
   )
 

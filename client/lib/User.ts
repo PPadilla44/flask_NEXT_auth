@@ -8,6 +8,13 @@ export const uploadAvatar = async ({ imageBlob, uploadPreset, token }: { imageBl
 
 }
 
+export const uploadCover = async ({ imageBlob, uploadPreset, token }: { imageBlob: Blob, uploadPreset: string, token: string }) => {
+
+    const { data } = await uploadCloudinary({ imageBlob, uploadPreset })
+    return await uploadCoverDB({ url: data.url, token })
+
+}
+
 const uploadCloudinary = async ({ imageBlob, uploadPreset }: { imageBlob: Blob, uploadPreset: string }) => {
     const formData = new FormData()
     formData.append("file", imageBlob)
@@ -26,5 +33,18 @@ const uploadAviDB = async ({ url, token }: { url: string, token: string }) => {
         "content-type": "application/json"
     }
 
-    return { response: await axios.post("http://localhost:5000/users/avatar", userData, { headers: headers } ) , url};
+    return { response: await axios.post("http://localhost:5000/users/avatar", userData, { headers: headers }), url };
+}
+
+const uploadCoverDB = async ({ url, token }: { url: string, token: string }) => {
+
+    const userData = new FormData();
+    userData.append("cover_photo", url)
+
+    const headers = {
+        "X-Auth-Token": token,
+        "content-type": "application/json"
+    }
+
+    return { response: await axios.post("http://localhost:5000/users/cover", userData, { headers: headers }), url };
 }

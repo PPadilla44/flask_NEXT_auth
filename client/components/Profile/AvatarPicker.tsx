@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react'
 import React from 'react'
 import useComponentVisible from '../../lib/useComponentVisible';
 import { useAuth } from '../contexts/UserContext';
-import PhotoToolTip from './PhotoToolTip'
+import PhotoToolTip from './AvatarToolTip'
 import Image from 'next/image';
 
 
