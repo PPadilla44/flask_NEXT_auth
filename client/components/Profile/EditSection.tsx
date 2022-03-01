@@ -2,7 +2,6 @@ import React from 'react'
 import { useAuth } from '../contexts/UserContext'
 import AvatarPicker from './AvatarPicker'
 import CoverPhoto from './CoverPhoto'
-import EditProfileBtn from './EditProfileBtn'
 
 const EditSection = () => {
 
@@ -16,7 +15,6 @@ const EditSection = () => {
                     <AvatarPicker />
                     <h4 className="text-4xl font-bold">{`${user.first_name} ${user.last_name}`}</h4>
                 </div>
-                <EditProfileBtn />
             </div>
         </div>
     )
